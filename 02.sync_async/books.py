@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from typing import List, Optional
-from .models import Book, CreateBook, SearchBook, SearchBooks
+from models import Book, CreateBook, SearchBook, SearchBooks
 
 
 route = APIRouter()
@@ -8,7 +8,7 @@ books: List[Book] = [] # [Book, Book, Book ....]
 
 @route.post('/')
 def create_book(book: CreateBook) -> Book:
-    Book(id=len(books)+1, **book.model_dump())
+    book = Book(id=len(books)+1, **book.model_dump())
     books.append(book)
 
     return book
@@ -18,7 +18,7 @@ def search_books(keyword: Optional[str], max_results: int = 10) -> SearchBooks:
     search_result = [book for book in books if keyword in book.title] if keyword else books
 
     # max_results: pagenation을 위한 옵션
-    return SearchBooks(result=search_result[:max_results])
+    return SearchBooks(results=search_result[:max_results])
 
 
 

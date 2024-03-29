@@ -1,19 +1,23 @@
-from pydantic import BaseModel
-from typing import Optional, List
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from database import Base
+# User(테이블)
+class User(Base):
+    __tablename__ = 'users'
 
-class Book(BaseModel):
-    id: int
-    title: str
-    author: str
-    description: Optional[str] = None
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True)
+    hashed_password = Column(String)
 
-class CreateBook(BaseModel):
-    title: str
-    author: str
-    description: Optional[str] = None
+    item = relationship("Item", back_populates='owner') # 역참조 > reverse_accessor => _set, related_name
 
-class SearchBook(BaseModel): # Detail - GET
-    results: Optional[Book] # Book
+# Item(테이블)
+class Item(Base):
+    __tablename__ = 'items'
 
-class SearchBooks(BaseModel): # BookList - GET
-    results: List[Book] # [Book, Book, Book]
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String)
+    description = Column(String)
+    owner_id = Column(Integer, ForeignKey('users.id'))
+
+    owner = relationship("User", back_populates='items')
