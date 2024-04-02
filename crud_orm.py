@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
 from models import User, Item
 import bcrypt
+from schemas import UserCreate, UserUpdate
 
 # User - CRUD
 def create_user(db: Session, user: UserCreate):
-    hashed_password = bcrypt.hashpw(user.password)
+    hashed_password = bcrypt.hashpw(user.hashed_password.encode('utf-8'), bcrypt.gensalt())
 
     db_user = User(email=user.email, hashed_password=hashed_password)
     db.add(db_user)
@@ -12,8 +13,11 @@ def create_user(db: Session, user: UserCreate):
 
     return db_user # object -> json (역직렬화)
 
-def get_user(db: Session, user_id: int):
+def get_user_id(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
+
+def get_user_email(db: Session, user_email: str):
+    return db.query(User).filter(User.email == user_email).first()
 
 def get_users(db: Session, skip: int=0, limit: int=10):
     return db.query(User).offset(skip).limit(limit).all()
@@ -47,7 +51,20 @@ def delete_user(db: Session, user_id: int):
     return db_user
 
 
-# Item - CRUD
+# Item - CRUD > tortoise // DRF + SimpleJWT
+def item_create():
+    pass
 
+def get_item():
+    pass
+
+def get_items():
+    pass
+
+def update_item():
+    pass
+
+def delete_item():
+    pass
 # FastAPI - Django(메인) + FastAPI(MSA) - Chatting // 비동기(ASGI)
 

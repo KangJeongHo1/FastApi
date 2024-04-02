@@ -9,7 +9,7 @@ class User(Base):
     email = Column(String, unique=True)
     hashed_password = Column(String)
 
-    item = relationship("Item", back_populates='owner') # 역참조 > reverse_accessor => _set, related_name
+    items = relationship("Item", back_populates='owner') # 역참조 > reverse_accessor => _set, related_name
 
 # Item(테이블)
 class Item(Base):
