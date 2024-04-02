@@ -1,16 +1,14 @@
-from database import SessionLocal
+# 인증관련추가 -> 토큰기반으로 유저 네임값을 가져올 수 있도록 한다.
 
-# 동기형 의존성(세션 관리)
-def get_db():
-    db = SessionLocal()
+users = {
+    1: {'username': '123'},
+    2: {'username': '1234'}
+}
 
-    try: 
-        yield db # 제너레이터, yield: 생산
-    finally:
-        db.close()
+def get_username(token: str):
+    # 토큰을 유저 ID로 간주
+    user_id = int(token)
 
-# 비동기형 의존성(세션 관리)
-from database import AsyncSessionLocal
-async def get_async_db():
-    async with AsyncSessionLocal() as session:
-        yield session
+    user = users.get(user_id)
+
+    return user['username']

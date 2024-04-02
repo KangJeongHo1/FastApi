@@ -1,10 +1,15 @@
 from fastapi import FastAPI
-from routes.users import router as user_router
+from sockets import router as socket_router
 
 app = FastAPI()
+app.include_router(socket_router)
 
-app.include_router(user_router) # django > settings.py
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", reload=True)
+# 경로, HTML Response
+from fastapi.responses import HTMLResponse
+from pathlib import Path
+@app.get("/")
+def index():
+    index_html = Path('index.html').read_text()
+    return HTMLResponse(index_html)
+
